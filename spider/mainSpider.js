@@ -22,7 +22,7 @@ download(url,function (data) {
     if(data){
         let $=cheerio.load(data);
         // let imgs = $('img');
-        console.log($('window'));
+        console.log($('window.server'));
         console.log($('table').eq(1).find('script').eq(0).html());
         // $('img').each(function (i,elem) {
         //     let imgSrc = $(this).attr('src');
