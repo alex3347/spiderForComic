@@ -1,6 +1,7 @@
 const phantom = require('phantom');
 const fs = require('fs');
 const request = require('request');
+const asyncModule = require('async');
 
 let pageInfoArray = [];
 exports.subPageSpider = async function subPageSpider(url,folderName) {
@@ -34,19 +35,38 @@ exports.subPageSpider = async function subPageSpider(url,folderName) {
     //图片下载逻辑
     let baseUrl = pageInfoArray[0];
     let maxNum = parseInt(pageInfoArray[1]);
-    // for(let i = 1;i<maxNum+1;i++){
-        for(let i = 1;i<3;i++){
-        if(i<10){
-            i = '0'+i;
+    let currentArray = Array.from(new Array(maxNum+1),function(value,index){
+        if(index<10){
+            index = '0'+index;
+            return index;
+        }else{
+            return index + '';
         }
+    });
+    currentArray.shift();
+
+    asyncModule.mapLimit(currentArray,5,function(i,callback){
         let requestUrl = baseUrl + i + '.jpg';
         let imgPath="/"+i+".jpg";
         let writeStream = fs.createWriteStream(__dirname + "/imgs/"+ folderName + "/" + imgPath,{autoClose:true});
-        request(requestUrl).pipe(writeStream); 
+        
+        request(requestUrl).on('error', function (err) {
+            console.log('图片请求失败-----',err);
+            }).pipe(writeStream);
+
         writeStream.on('finish',function(){
             console.log(folderName + "/" + i +'.jpg 保存成功')
+            callback(null);
         })
-    }
+        
+    },function(err,result){
+        if(err){
+            console.log(err);
+        }else{
+            console.log('图片文件夹' + folderName + '下载完成');
+        }
+    })
+
   }
 
 // subPageSpider('http://comic.kukudm.com/comiclist/3/3/1.htm');

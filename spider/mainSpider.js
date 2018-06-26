@@ -1,6 +1,7 @@
 const phantom = require('phantom');
 const fs = require('fs');
 const subPageSpider = require('./phantomNodeSpider.js').subPageSpider;
+const asyncModule = require('async');
 
 let pageInfoArray = [];
 async function mainPageSpider(url) {
@@ -31,23 +32,23 @@ async function mainPageSpider(url) {
     console.log('主页面链接数组获取成功');
     await instance.exit();
 
+    //执行子页面爬取图片
+    function runSubPageSpider(arg){
+        let url = `http://comic.kukudm.com/comiclist/3/${arg}/1.htm`
+        subPageSpider(url,arg);
+    }
+    
     //建立图片文件夹
-    // for(let i = 0;i<pageInfoArray.length+1;i++){
-        for(let i = 0;i<8;i++){
+    // for(let i = 0;i<pageInfoArray.length;i++){
+        for(let i = 0;i<2;i++){
         fs.mkdir(`${__dirname}/imgs/${pageInfoArray[i]}`,function(err){  
             if(err)  
                 console.error(err);  
             console.log('创建文件夹'+pageInfoArray[i]+'成功');  
         });
+        runSubPageSpider(pageInfoArray[i]);
     }
-
-    //执行子页面爬取图片
-    function runSubPageSpider(pageInfoArray){
-        let arg = pageInfoArray[5];
-        let url = `http://comic.kukudm.com/comiclist/3/${arg}/1.htm`
-        subPageSpider(url,arg);
-    }
-    runSubPageSpider(pageInfoArray);
+    
   }
 
 mainPageSpider('http://comic.kukudm.com/comiclist/3/');
