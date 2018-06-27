@@ -1,18 +1,16 @@
 {
-  "name": "spiderforyinxiang",
+  "name": "spiderforcomic",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "cheerio": "^1.0.0-rc.2",
+    "async": "^2.6.1",
     "phantom": "^6.0.0",
-    "phantomjs": "^2.1.7",
     "request": "^2.87.0"
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "phantomjs": "node_modules/.bin/phantomjs"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC"

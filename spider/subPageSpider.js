@@ -4,7 +4,7 @@ const request = require('request');
 const asyncModule = require('async');
 
 let pageInfoArray = [];
-exports.subPageSpider = async function subPageSpider(url,folderName) {
+exports.subPageSpider = async function subPageSpider(url,folderName,nextCallback) {
     //获取页面信息逻辑
     const instance = await phantom.create();
     const page = await instance.createPage();
@@ -45,10 +45,10 @@ exports.subPageSpider = async function subPageSpider(url,folderName) {
     });
     currentArray.shift();
 
-    asyncModule.mapLimit(currentArray,5,function(i,callback){
+    asyncModule.mapLimit(['01','02'],5,function(i,callback){
         let requestUrl = baseUrl + i + '.jpg';
         let imgPath="/"+i+".jpg";
-        let writeStream = fs.createWriteStream(__dirname + "/imgs/"+ folderName + "/" + imgPath,{autoClose:true});
+        let writeStream = fs.createWriteStream("../imgs/"+ folderName + "/" + imgPath,{autoClose:true});
         
         request(requestUrl).on('error', function (err) {
             console.log('图片请求失败-----',err);
@@ -64,6 +64,7 @@ exports.subPageSpider = async function subPageSpider(url,folderName) {
             console.log(err);
         }else{
             console.log('图片文件夹' + folderName + '下载完成');
+            nextCallback();
         }
     })
 
