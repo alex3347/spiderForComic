@@ -3,10 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "bin": {
+    "spider": "bin/entry.js"
+  },
   "dependencies": {
     "async": "^2.6.1",
-    "phantom": "^6.0.0",
-    "request": "^2.87.0"
+    "commander": "^2.19.0",
+    "phantom": "^6.0.3"
   },
   "devDependencies": {},
   "scripts": {
